@@ -4,6 +4,7 @@ import Stats from "@/components/sections/Stats";
 import Courses from "@/components/sections/Courses";
 import WhyChoose from "@/components/sections/WhyChoose";
 import HowItWorks from "@/components/sections/HowItWorks";
+import YouTube from "@/components/sections/YouTube";
 import Testimonials from "@/components/sections/Testimonials";
 import MockTestLead from "@/components/sections/MockTestLead";
 import DemoBooking from "@/components/sections/DemoBooking";
@@ -22,6 +23,7 @@ export default function Home() {
         <Courses />
         <WhyChoose />
         <HowItWorks />
+        <YouTube />
         <Testimonials />
         <MockTestLead />
         <DemoBooking />
