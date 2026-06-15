@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
 
     // Notify the academy
     await resend.emails.send({
-      from: "IN2LAW Academy <noreply@in2law.in>",
-      to: process.env.ADMIN_EMAIL ?? "admin@in2law.in",
+      from: "IN2LAW Academy <onboarding@resend.dev>",
+      to: process.env.ADMIN_EMAIL ?? "in2lawacademy@gmail.com",
       subject: `🎓 New Demo Booking – ${data.name}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 32px; background: #f8fafc; border-radius: 12px;">
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
     // Confirmation to student
     await resend.emails.send({
-      from: "IN2LAW Academy <noreply@in2law.in>",
+      from: "IN2LAW Academy <onboarding@resend.dev>",
       to: data.email,
       subject: "✅ Your Free Demo is Booked – IN2LAW Academy",
       html: `
