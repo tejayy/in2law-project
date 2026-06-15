@@ -76,19 +76,26 @@ export default function DemoBooking() {
     formState: { errors },
   } = useForm<F>({ resolver: zodResolver(schema) });
 
+  const [error, setError] = useState("");
+
   const onSubmit = async (data: F) => {
     setBusy(true);
+    setError("");
     try {
-      await fetch("/api/demo-booking", {
+      const res = await fetch("/api/demo-booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (!res.ok) throw new Error("Request failed");
+      const json = await res.json();
+      if (!json.success) throw new Error("Server error");
+      setDone(true);
     } catch {
-      /* silent */
+      setError("Something went wrong. Please try again or call us directly.");
+    } finally {
+      setBusy(false);
     }
-    setBusy(false);
-    setDone(true);
   };
 
   return (
@@ -408,6 +415,11 @@ export default function DemoBooking() {
                       </>
                     )}
                   </button>
+                  {error && (
+                    <p className="text-red-500 text-sm text-center font-medium">
+                      {error}
+                    </p>
+                  )}
                   <p
                     className="text-xs text-center"
                     style={{ color: "rgba(46,38,18,0.35)" }}

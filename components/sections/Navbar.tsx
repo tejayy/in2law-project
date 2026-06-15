@@ -207,7 +207,7 @@ export default function Navbar() {
               }
             >
               <Phone className="w-3.5 h-3.5" />
-              +91 99999 99999
+              +91 94037 73943
             </a>
             <div
               className="h-5 w-px"
@@ -355,7 +355,7 @@ export default function Navbar() {
                   }}
                 >
                   <Phone className="w-4 h-4" />
-                  +91 99999 99999
+                  +91 94037 73943
                 </a>
               </div>
             </motion.div>

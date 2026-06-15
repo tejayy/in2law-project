@@ -294,7 +294,7 @@ export default function Footer() {
                     className="w-4 h-4 mt-0.5 shrink-0"
                     style={{ color: P.copper }}
                   />
-                  <span>+91 99999 99999</span>
+                  <span>+91 94037 73943</span>
                 </a>
               </li>
               <li>
