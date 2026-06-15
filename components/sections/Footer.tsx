@@ -1,7 +1,19 @@
 "use client";
 
-import { Scale, Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
+
+const P = {
+  bg: "#0f0905",
+  canvas: "#2e2612",
+  mid: "#4a2e0a",
+  copper: "#b26a19",
+  amber: "#c88a3a",
+  linen: "#ede3d7",
+  white: "#ffffff",
+} as const;
+const ACCENT_BAR =
+  "linear-gradient(90deg,#2e2612,#6b3e0f,#b26a19,#6b3e0f,#2e2612)";
 
 const quickLinks = [
   { label: "CLAT Preparation", href: "#courses" },
@@ -11,7 +23,6 @@ const quickLinks = [
   { label: "Free Mock Test", href: "#mock" },
   { label: "Book Demo", href: "#demo" },
 ];
-
 const socials = [
   {
     label: "Instagram",
@@ -35,38 +46,148 @@ const socials = [
   },
 ];
 
+function MiniScales() {
+  return (
+    <svg viewBox="0 0 24 26" fill="none" className="w-5 h-5">
+      <rect
+        x="5.5"
+        y="23"
+        width="13"
+        height="2"
+        rx="1"
+        fill={P.linen}
+        opacity="0.8"
+      />
+      <rect
+        x="11.5"
+        y="3"
+        width="1"
+        height="20"
+        rx="0.5"
+        fill={P.linen}
+        opacity="0.6"
+      />
+      <circle cx="12" cy="2.5" r="2" fill={P.copper} opacity="0.9" />
+      <rect
+        x="2"
+        y="5"
+        width="20"
+        height="1"
+        rx="0.5"
+        fill={P.linen}
+        opacity="0.7"
+      />
+      <path
+        d="M2 6 Q5 10 8 6"
+        stroke={P.copper}
+        strokeWidth="1"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M16 6 Q19 10 22 6"
+        stroke={P.copper}
+        strokeWidth="1"
+        fill="none"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export default function Footer() {
   const go = (href: string) =>
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <footer
-      style={{ background: "#1e0901" }}
       className="text-white relative overflow-hidden"
+      style={{ background: P.bg }}
     >
-      <div className="h-px bg-gradient-to-r from-transparent via-[#E8C581]/30 to-transparent" />
+      <div className="h-[3px]" style={{ background: ACCENT_BAR }} />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle,rgba(237,227,215,0.03) 1px,transparent 1px)`,
+          backgroundSize: "32px 32px",
+        }}
+      />
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-16 pb-8">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-16 pb-8 relative">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-10 h-10 rounded-xl orange-gradient flex items-center justify-center">
-                <Scale className="w-5 h-5 text-white" />
+              <div className="relative w-12 h-12 shrink-0 flex items-center justify-center">
+                <svg
+                  className="spin-slow absolute inset-0 w-full h-full"
+                  viewBox="0 0 48 48"
+                  fill="none"
+                >
+                  <circle
+                    cx="24"
+                    cy="24"
+                    r="22"
+                    stroke="url(#copperRing)"
+                    strokeWidth="1.5"
+                    strokeDasharray="8 4"
+                    strokeLinecap="round"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="copperRing"
+                      x1="0"
+                      y1="0"
+                      x2="48"
+                      y2="48"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor={P.copper} stopOpacity="0.8" />
+                      <stop
+                        offset="0.5"
+                        stopColor={P.linen}
+                        stopOpacity="0.3"
+                      />
+                      <stop offset="1" stopColor={P.copper} stopOpacity="0.8" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center"
+                  style={{
+                    background: `linear-gradient(135deg,${P.canvas},${P.mid})`,
+                  }}
+                >
+                  <MiniScales />
+                </div>
               </div>
               <div>
-                <span className="font-heading font-extrabold text-white text-xl">
-                  IN2LAW
-                </span>
-                <span className="text-[#E8C581] text-xs ml-1 font-semibold">
-                  Academy
-                </span>
+                <div className="flex items-baseline gap-1">
+                  <span
+                    className="font-heading font-extrabold text-xl"
+                    style={{ color: P.white }}
+                  >
+                    IN2LAW
+                  </span>
+                  <span
+                    className="text-xs font-semibold"
+                    style={{ color: P.linen }}
+                  >
+                    Academy
+                  </span>
+                </div>
               </div>
             </div>
-            <p className="text-[#E8C581] text-[10px] font-bold tracking-[0.22em] uppercase mb-3">
+            <p
+              className="text-[10px] font-bold tracking-[0.22em] uppercase mb-3"
+              style={{ color: P.linen }}
+            >
               Of the Lawyers · By the Lawyers · For the Lawyers
             </p>
-            <p className="text-white/45 text-sm leading-relaxed mb-5">
+            <p
+              className="text-sm leading-relaxed mb-5"
+              style={{ color: "rgba(255,255,255,0.38)" }}
+            >
               Pune&apos;s premier legal entrance coaching institute. Empowering
               future lawyers since 2019.
             </p>
@@ -76,12 +197,33 @@ export default function Footer() {
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="w-9 h-9 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center hover:bg-[#BA3D03]/30 hover:border-[#BA3D03]/50 transition-colors"
+                  className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:-translate-y-0.5"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                    color: "rgba(237,227,215,0.35)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background =
+                      `rgba(178,106,25,0.15)`;
+                    (e.currentTarget as HTMLAnchorElement).style.borderColor =
+                      `rgba(178,106,25,0.4)`;
+                    (e.currentTarget as HTMLAnchorElement).style.color =
+                      P.copper;
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background =
+                      "rgba(255,255,255,0.04)";
+                    (e.currentTarget as HTMLAnchorElement).style.borderColor =
+                      "rgba(255,255,255,0.06)";
+                    (e.currentTarget as HTMLAnchorElement).style.color =
+                      "rgba(237,227,215,0.35)";
+                  }}
                 >
                   <svg
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-3.5 h-3.5 text-white/50"
+                    className="w-3.5 h-3.5"
                   >
                     <path d={s.path} />
                   </svg>
@@ -92,7 +234,10 @@ export default function Footer() {
 
           {/* Courses */}
           <div>
-            <h4 className="font-bold text-white mb-5 text-xs tracking-widest uppercase">
+            <h4
+              className="font-bold mb-5 text-xs tracking-widest uppercase"
+              style={{ color: P.white }}
+            >
               Our Courses
             </h4>
             <ul className="space-y-3">
@@ -100,8 +245,21 @@ export default function Footer() {
                 <li key={l.label}>
                   <button
                     onClick={() => go(l.href)}
-                    className="text-white/45 hover:text-[#E8C581] text-sm transition-colors text-left"
+                    className="text-sm text-left group flex items-center gap-1.5 transition-colors"
+                    style={{ color: "rgba(255,255,255,0.38)" }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        P.linen;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLButtonElement).style.color =
+                        "rgba(255,255,255,0.38)";
+                    }}
                   >
+                    <span
+                      className="w-1 h-1 rounded-full shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ background: P.copper }}
+                    />
                     {l.label}
                   </button>
                 </li>
@@ -111,32 +269,65 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-bold text-white mb-5 text-xs tracking-widest uppercase">
+            <h4
+              className="font-bold mb-5 text-xs tracking-widest uppercase"
+              style={{ color: P.white }}
+            >
               Contact
             </h4>
             <ul className="space-y-4">
               <li>
                 <a
                   href="tel:+919999999999"
-                  className="flex items-start gap-3 text-white/45 hover:text-[#E8C581] transition-colors"
+                  className="flex items-start gap-3 text-sm transition-colors"
+                  style={{ color: "rgba(255,255,255,0.38)" }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.color =
+                      P.linen;
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.color =
+                      "rgba(255,255,255,0.38)";
+                  }}
                 >
-                  <Phone className="w-4 h-4 text-[#E58423] mt-0.5 shrink-0" />
-                  <span className="text-sm">+91 99999 99999</span>
+                  <Phone
+                    className="w-4 h-4 mt-0.5 shrink-0"
+                    style={{ color: P.copper }}
+                  />
+                  <span>+91 99999 99999</span>
                 </a>
               </li>
               <li>
                 <a
                   href="mailto:info@in2law.in"
-                  className="flex items-start gap-3 text-white/45 hover:text-[#E8C581] transition-colors"
+                  className="flex items-start gap-3 text-sm transition-colors"
+                  style={{ color: "rgba(255,255,255,0.38)" }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.color =
+                      P.linen;
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.color =
+                      "rgba(255,255,255,0.38)";
+                  }}
                 >
-                  <Mail className="w-4 h-4 text-[#E58423] mt-0.5 shrink-0" />
-                  <span className="text-sm">info@in2law.in</span>
+                  <Mail
+                    className="w-4 h-4 mt-0.5 shrink-0"
+                    style={{ color: P.copper }}
+                  />
+                  <span>info@in2law.in</span>
                 </a>
               </li>
               <li>
-                <div className="flex items-start gap-3 text-white/45">
-                  <MapPin className="w-4 h-4 text-[#E58423] mt-0.5 shrink-0" />
-                  <span className="text-sm leading-relaxed">
+                <div
+                  className="flex items-start gap-3 text-sm"
+                  style={{ color: "rgba(255,255,255,0.38)" }}
+                >
+                  <MapPin
+                    className="w-4 h-4 mt-0.5 shrink-0"
+                    style={{ color: P.copper }}
+                  />
+                  <span className="leading-relaxed">
                     IN2LAW Academy, Law College Road,
                     <br />
                     Pune, Maharashtra – 411004
@@ -148,49 +339,72 @@ export default function Footer() {
 
           {/* Hours */}
           <div>
-            <h4 className="font-bold text-white mb-5 text-xs tracking-widest uppercase">
+            <h4
+              className="font-bold mb-5 text-xs tracking-widest uppercase"
+              style={{ color: P.white }}
+            >
               Study Hours
             </h4>
             <ul className="space-y-3 text-sm">
-              <li className="flex justify-between text-white/45">
-                <span>Mon – Fri</span>
-                <span className="text-white/65">8 AM – 8 PM</span>
-              </li>
-              <li className="flex justify-between text-white/45">
-                <span>Saturday</span>
-                <span className="text-white/65">8 AM – 6 PM</span>
-              </li>
-              <li className="flex justify-between text-white/45">
-                <span>Sunday</span>
-                <span className="text-white/65">Mock Test Day</span>
-              </li>
+              {[
+                { day: "Mon – Fri", hours: "8 AM – 8 PM" },
+                { day: "Saturday", hours: "8 AM – 6 PM" },
+                { day: "Sunday", hours: "Mock Test Day" },
+              ].map((item) => (
+                <li
+                  key={item.day}
+                  className="flex justify-between"
+                  style={{ color: "rgba(255,255,255,0.38)" }}
+                >
+                  <span>{item.day}</span>
+                  <span style={{ color: "rgba(237,227,215,0.6)" }}>
+                    {item.hours}
+                  </span>
+                </li>
+              ))}
             </ul>
-            <div className="mt-6 p-4 bg-[#BA3D03]/20 border border-[#BA3D03]/30 rounded-xl">
-              <p className="text-[#E8C581] font-bold text-sm mb-1">
+            <div
+              className="mt-6 p-4 rounded-xl"
+              style={{
+                background: "rgba(178,106,25,0.07)",
+                border: "1px solid rgba(178,106,25,0.2)",
+              }}
+            >
+              <p className="font-bold text-sm mb-1" style={{ color: P.copper }}>
                 Admissions Open
               </p>
-              <p className="text-white/50 text-xs">
+              <p
+                className="text-xs"
+                style={{ color: "rgba(255,255,255,0.38)" }}
+              >
                 New batches starting soon. Limited seats.
               </p>
             </div>
           </div>
         </div>
 
-        {/* bottom */}
-        <div className="border-t border-white/8 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/30 text-xs">
+        <div
+          className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+        >
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.22)" }}>
             © 2024 IN2LAW Academy. All rights reserved.
           </p>
-          <div className="flex gap-5 text-white/25 text-xs">
-            <Link href="#" className="hover:text-white/50 transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="#" className="hover:text-white/50 transition-colors">
-              Terms of Service
-            </Link>
-            <Link href="#" className="hover:text-white/50 transition-colors">
-              Refund Policy
-            </Link>
+          <div
+            className="flex gap-5 text-xs"
+            style={{ color: "rgba(255,255,255,0.2)" }}
+          >
+            {["Privacy Policy", "Terms of Service", "Refund Policy"].map(
+              (label) => (
+                <Link
+                  key={label}
+                  href="#"
+                  className="transition-colors hover:text-white/40"
+                >
+                  {label}
+                </Link>
+              ),
+            )}
           </div>
         </div>
       </div>

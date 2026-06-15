@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "motion/react";
 import {
   Scale,
   Users,
@@ -12,9 +10,24 @@ import {
   Award,
   BookOpen,
   Shield,
+  ArrowRight,
 } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+const P = {
+  bg: "#1a0f08",
+  canvas: "#2e2612",
+  mid: "#4a2e0a",
+  warm: "#6b3e0f",
+  copper: "#b26a19",
+  amber: "#c88a3a",
+  linen: "#ede3d7",
+  panel: "rgba(252,248,242,0.97)",
+  white: "#ffffff",
+} as const;
+const SHADOW =
+  "0 32px 80px rgba(46,38,18,0.45), 0 0 0 1px rgba(237,227,215,0.25)";
+const ACCENT_BAR =
+  "linear-gradient(90deg,#2e2612,#6b3e0f,#b26a19,#6b3e0f,#2e2612)";
 
 const features = [
   {
@@ -38,7 +51,7 @@ const features = [
     desc: "70+ full-length mocks with section-wise analytics and weekly improvement reviews.",
   },
   {
-    icon: MessageSquare,
+    icon: Award,
     title: "Interview Guidance",
     desc: "Mock GD-PI and viva voce sessions by legal professionals — not coaching bots.",
   },
@@ -60,82 +73,131 @@ const features = [
 ];
 
 export default function WhyChoose() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".why-card", {
-        y: 35,
-        opacity: 0,
-        duration: 0.55,
-        stagger: 0.07,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".why-grid", start: "top 76%" },
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section
       id="why"
-      ref={ref}
-      className="py-24 bg-[#fdf6ec] relative overflow-hidden"
+      className="py-24 relative overflow-hidden"
+      style={{ background: P.bg }}
     >
-      {/* warm blobs */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-[#BA3D03]/6 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#E58423]/5 rounded-full blur-3xl pointer-events-none" />
-      {/* top rule */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#BA3D03]/30 to-transparent" />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse 65% 55% at 10% 30%,rgba(107,62,15,0.22) 0%,transparent 60%),
+          radial-gradient(ellipse 55% 45% at 90% 70%,rgba(74,46,10,0.18) 0%,transparent 55%)`,
+        }}
+      />
+      <hr className="hr-warm absolute top-0 inset-x-0 border-none h-px" />
 
       <div className="max-w-7xl mx-auto px-5 sm:px-8 relative">
-        <div className="text-center mb-14">
-          <span className="inline-block text-[#BA3D03] text-xs font-bold tracking-[0.22em] uppercase mb-3">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-14"
+        >
+          <span
+            className="inline-block text-xs font-bold tracking-[0.22em] uppercase mb-3"
+            style={{ color: P.copper }}
+          >
             Our Difference
           </span>
-          <h2 className="font-heading text-4xl sm:text-5xl font-extrabold text-[#3D1202] mb-3">
-            Why Choose <span className="orange-text">IN2LAW</span>?
+          <h2
+            className="font-heading text-4xl sm:text-5xl font-extrabold mb-3"
+            style={{ color: P.white }}
+          >
+            Why Choose{" "}
+            <span
+              style={{
+                background: "linear-gradient(135deg,#ede3d7,#f5ece2)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              IN2LAW
+            </span>
+            ?
           </h2>
-          <p className="text-[#3D1202]/55 text-lg max-w-md mx-auto">
+          <p
+            className="text-lg max-w-md mx-auto"
+            style={{ color: "rgba(237,227,215,0.55)" }}
+          >
             Built by lawyers, for future lawyers. Every element designed to
             maximise your success.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="why-grid grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
-          {features.map((f, i) => (
-            <div
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+          {features.map((f, index) => (
+            <motion.div
               key={f.title}
-              className="why-card bg-white rounded-2xl p-6 border border-[#BA3D03]/10 hover:shadow-xl hover:border-[#E58423]/30 hover:-translate-y-1 transition-all duration-300 group"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{
+                duration: 0.55,
+                delay: index * 0.05,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="relative rounded-2xl p-6 group hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              style={{ background: P.panel, boxShadow: SHADOW }}
             >
-              {/* icon */}
               <div
-                className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ${
-                  i % 2 === 0
-                    ? "bg-[#BA3D03]/10 text-[#BA3D03]"
-                    : "bg-[#E58423]/10 text-[#E58423]"
-                }`}
+                className="absolute top-0 inset-x-0 h-[3px]"
+                style={{ background: ACCENT_BAR }}
+              />
+              <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+                style={{
+                  background: "rgba(178,106,25,0.08)",
+                  border: "1px solid rgba(178,106,25,0.15)",
+                }}
               >
-                <f.icon className="w-5 h-5" />
+                <f.icon className="w-5 h-5" style={{ color: P.copper }} />
               </div>
-              <h3 className="font-semibold text-[#3D1202] text-sm mb-2 group-hover:text-[#BA3D03] transition-colors leading-snug">
+              <h3
+                className="font-semibold text-sm mb-2 leading-snug"
+                style={{ color: P.canvas }}
+              >
                 {f.title}
               </h3>
-              <p className="text-[#3D1202]/55 text-sm leading-relaxed">
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: "rgba(46,38,18,0.6)" }}
+              >
                 {f.desc}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* bottom CTA strip */}
-        <div className="bean-gradient rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-72 h-full bg-[#BA3D03]/20 rounded-3xl blur-2xl pointer-events-none" />
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="relative rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 overflow-hidden"
+          style={{ background: P.panel, boxShadow: SHADOW }}
+        >
+          <div
+            className="absolute top-0 inset-x-0 h-[3px]"
+            style={{ background: ACCENT_BAR }}
+          />
+          <div
+            className="absolute right-0 top-0 w-72 h-full pointer-events-none rounded-3xl"
+            style={{
+              background: `radial-gradient(ellipse at 80% 50%,rgba(178,106,25,0.08),transparent 70%)`,
+            }}
+          />
           <div className="relative">
-            <h3 className="font-heading text-2xl font-extrabold text-white mb-1">
+            <h3
+              className="font-heading text-2xl font-extrabold mb-1"
+              style={{ color: P.canvas }}
+            >
               Ready to start your legal journey?
             </h3>
-            <p className="text-white/55">
+            <p style={{ color: "rgba(46,38,18,0.55)" }}>
               Join the hundreds of successful lawyers who started right here.
             </p>
           </div>
@@ -145,11 +207,12 @@ export default function WhyChoose() {
                 .getElementById("demo")
                 ?.scrollIntoView({ behavior: "smooth" })
             }
-            className="relative shrink-0 bg-[#E58423] hover:bg-[#f09838] text-white font-bold px-8 py-4 rounded-full transition-all hover:-translate-y-0.5 shadow-xl shadow-[#E58423]/30"
+            className="btn-panel relative shrink-0 px-8 py-4 rounded-full flex items-center gap-2"
+            style={{ boxShadow: "0 6px 24px rgba(46,38,18,0.2)" }}
           >
-            Book Free Demo →
+            Book Free Demo <ArrowRight className="w-4 h-4" />
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

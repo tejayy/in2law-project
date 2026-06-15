@@ -39,7 +39,11 @@ export default function FloatingWhatsApp() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.88, y: 12 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden w-60"
+            className="rounded-2xl shadow-2xl overflow-hidden w-60"
+            style={{
+              background: "#fdf8f2",
+              border: "1px solid rgba(178,106,25,0.18)",
+            }}
           >
             <div className="bg-[#25D366] px-4 py-3">
               <p className="text-white font-bold text-sm">Chat on WhatsApp</p>
@@ -54,9 +58,21 @@ export default function FloatingWhatsApp() {
                   href={`https://wa.me/919999999999?text=${encodeURIComponent(o.msg)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-[#fdf6ec] transition-colors text-sm text-[#3D1202] font-medium"
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl transition-colors text-sm font-medium"
+                  style={{ color: "#2e2612" }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background =
+                      "rgba(178,106,25,0.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background =
+                      "transparent";
+                  }}
                 >
-                  <div className="w-2 h-2 rounded-full bg-[#25D366] shrink-0" />
+                  <div
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ background: "#b26a19" }}
+                  />
                   {o.label}
                 </a>
               ))}
@@ -68,7 +84,7 @@ export default function FloatingWhatsApp() {
       <button
         onClick={() => setOpen(!open)}
         aria-label="WhatsApp chat"
-        className="wa-bounce w-14 h-14 bg-[#25D366] hover:bg-green-500 rounded-full flex items-center justify-center shadow-xl shadow-green-600/35 transition-colors"
+        className="wa-float w-14 h-14 bg-[#25D366] hover:bg-green-500 rounded-full flex items-center justify-center shadow-xl shadow-green-600/35 transition-colors"
       >
         <AnimatePresence mode="wait">
           {open ? (

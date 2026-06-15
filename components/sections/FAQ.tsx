@@ -1,12 +1,22 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
-gsap.registerPlugin(ScrollTrigger);
+const P = {
+  bg: "#1a0f08",
+  canvas: "#2e2612",
+  mid: "#4a2e0a",
+  warm: "#6b3e0f",
+  copper: "#b26a19",
+  amber: "#c88a3a",
+  linen: "#ede3d7",
+  panel: "rgba(252,248,242,0.97)",
+  white: "#ffffff",
+} as const;
+const SHADOW =
+  "0 32px 80px rgba(46,38,18,0.45), 0 0 0 1px rgba(237,227,215,0.25)";
 
 const faqs = [
   {
@@ -50,27 +60,37 @@ function FAQItem({
 }) {
   return (
     <div
-      className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
-        open
-          ? "border-[#BA3D03]/50 shadow-lg shadow-[#BA3D03]/5"
-          : "border-[#BA3D03]/12 bg-white"
-      }`}
+      className="relative rounded-2xl overflow-hidden transition-all duration-300"
+      style={{
+        background: P.panel,
+        boxShadow: open
+          ? `0 32px 80px rgba(46,38,18,0.35),0 0 0 1px ${P.copper}40`
+          : SHADOW,
+        borderLeft: open ? `3px solid ${P.copper}` : "3px solid transparent",
+      }}
     >
       <button
         onClick={toggle}
-        className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left hover:bg-[#fdf6ec] transition-colors"
+        className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+        style={{ background: "transparent" }}
       >
         <span
-          className={`font-semibold text-sm sm:text-[0.95rem] leading-snug transition-colors ${open ? "text-[#BA3D03]" : "text-[#3D1202]"}`}
+          className="font-semibold text-sm sm:text-[0.95rem] leading-snug transition-colors"
+          style={{ color: open ? P.copper : P.canvas }}
         >
           {faq.q}
         </span>
         <div
-          className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+          className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all"
+          style={
             open
-              ? "bg-[#BA3D03] text-white rotate-0"
-              : "bg-[#BA3D03]/10 text-[#BA3D03]"
-          }`}
+              ? { background: P.copper, color: P.canvas }
+              : {
+                  background: "rgba(178,106,25,0.08)",
+                  color: P.copper,
+                  border: "1px solid rgba(178,106,25,0.2)",
+                }
+          }
         >
           {open ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
         </div>
@@ -84,7 +104,13 @@ function FAQItem({
             transition={{ duration: 0.28, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="px-6 pb-5 text-[#3D1202]/65 text-sm leading-relaxed border-t border-[#BA3D03]/10 pt-4">
+            <div
+              className="px-6 pb-5 text-sm leading-relaxed pt-4"
+              style={{
+                borderTop: "1px solid rgba(46,38,18,0.07)",
+                color: "rgba(46,38,18,0.65)",
+              }}
+            >
               {faq.a}
             </div>
           </motion.div>
@@ -96,59 +122,93 @@ function FAQItem({
 
 export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".faq-item", {
-        y: 20,
-        opacity: 0,
-        duration: 0.45,
-        stagger: 0.07,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".faq-list", start: "top 80%" },
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
 
   return (
-    <section id="faq" ref={ref} className="py-24 bg-white relative">
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#BA3D03]/20 to-transparent" />
+    <section id="faq" className="py-24 relative" style={{ background: P.bg }}>
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse 60% 50% at 50% 30%,rgba(107,62,15,0.2) 0%,transparent 60%)`,
+        }}
+      />
+      <hr className="hr-warm absolute top-0 inset-x-0 border-none h-px" />
 
-      <div className="max-w-3xl mx-auto px-5 sm:px-8">
-        <div className="text-center mb-14">
-          <span className="inline-block text-[#BA3D03] text-xs font-bold tracking-[0.22em] uppercase mb-3">
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-14"
+        >
+          <span
+            className="inline-block text-xs font-bold tracking-[0.22em] uppercase mb-3"
+            style={{ color: P.copper }}
+          >
             FAQ
           </span>
-          <h2 className="font-heading text-4xl sm:text-5xl font-extrabold text-[#3D1202] mb-3">
-            Common <span className="orange-text">Questions</span>
+          <h2
+            className="font-heading text-4xl sm:text-5xl font-extrabold mb-3"
+            style={{ color: P.white }}
+          >
+            Common{" "}
+            <span
+              style={{
+                background: "linear-gradient(135deg,#ede3d7,#f5ece2)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Questions
+            </span>
           </h2>
-          <p className="text-[#3D1202]/55 text-lg max-w-md mx-auto">
+          <p
+            className="text-lg max-w-md mx-auto"
+            style={{ color: "rgba(237,227,215,0.55)" }}
+          >
             Everything you need to know before joining IN2LAW Academy.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="faq-list space-y-3 mb-12">
+        <div className="space-y-3 mb-12">
           {faqs.map((f, i) => (
-            <div key={i} className="faq-item">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{
+                duration: 0.45,
+                delay: i * 0.06,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
               <FAQItem
                 faq={f}
                 open={openIdx === i}
                 toggle={() => setOpenIdx(openIdx === i ? null : i)}
               />
-            </div>
+            </motion.div>
           ))}
         </div>
 
         <div className="text-center">
-          <p className="text-[#3D1202]/50 mb-4 text-sm">
+          <p
+            className="mb-4 text-sm"
+            style={{ color: "rgba(237,227,215,0.5)" }}
+          >
             Still have questions?
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href="tel:+919999999999"
-              className="inline-flex items-center justify-center gap-2 bg-[#3D1202] text-[#E8C581] font-bold px-6 py-3 rounded-xl hover:bg-[#5a1c03] transition-colors"
+              className="inline-flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-xl transition-all hover:-translate-y-0.5"
+              style={{
+                background: `linear-gradient(135deg,${P.canvas},${P.mid})`,
+                color: P.linen,
+                border: `1px solid rgba(237,227,215,0.15)`,
+              }}
             >
               Call Us Directly
             </a>
@@ -156,7 +216,7 @@ export default function FAQ() {
               href="https://wa.me/919999999999?text=Hi%2C%20I%20have%20a%20question%20about%20IN2LAW%20Academy"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold px-6 py-3 rounded-xl hover:bg-green-600 transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold px-6 py-3 rounded-xl hover:bg-green-600 transition-colors hover:-translate-y-0.5"
             >
               WhatsApp Us
             </a>

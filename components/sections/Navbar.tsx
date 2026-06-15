@@ -1,8 +1,22 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Menu, X, ChevronRight, Phone } from "lucide-react";
+
+/* ─── Palette ─────────────────────────── */
+const N = {
+  bg: "#1a0f08", // espresso
+  canvas: "#2e2612", // dark khaki
+  mid: "#4a2e0a",
+  copper: "#b26a19", // copperwood
+  amber: "#c88a3a",
+  linen: "#ede3d7", // linen
+  white: "#ffffff",
+} as const;
+
+const ACCENT_BAR =
+  "linear-gradient(90deg,#2e2612,#6b3e0f,#b26a19,#6b3e0f,#2e2612)";
 
 const NAV = [
   { label: "Courses", href: "#courses" },
@@ -15,57 +29,48 @@ const NAV = [
 export default function Navbar() {
   const [solid, setSolid] = useState(false);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<string | null>(null);
-  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const fn = () => setSolid(window.scrollY > 40);
+    const fn = () => setSolid(window.scrollY > 50);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
   const go = (href: string) => {
     setOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .querySelector(href)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
     <>
-      {/* ── Main bar ─────────────────────────────────────────── */}
       <motion.header
-        ref={headerRef}
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-x-0 top-0 z-50"
         style={{
-          background: solid ? "rgba(8,2,0,0.88)" : "transparent",
-          backdropFilter: solid ? "blur(24px) saturate(180%)" : "none",
-          WebkitBackdropFilter: solid ? "blur(24px) saturate(180%)" : "none",
-          borderBottom: solid ? "1px solid rgba(232,197,129,0.1)" : "none",
-          transition:
-            "background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease",
+          background: solid ? "rgba(26,15,8,0.94)" : "transparent",
+          backdropFilter: solid ? "blur(20px) saturate(160%)" : "none",
+          WebkitBackdropFilter: solid ? "blur(20px) saturate(160%)" : "none",
+          borderBottom: solid ? "1px solid rgba(237,227,215,0.08)" : "none",
+          boxShadow: solid ? "0 2px 24px rgba(0,0,0,0.3)" : "none",
+          transition: "all 0.35s ease",
         }}
       >
-        {/* top gold line — only when scrolled */}
-        {solid && (
-          <div
-            className="absolute top-0 inset-x-0 h-[2px]"
-            style={{
-              background:
-                "linear-gradient(90deg, transparent 0%, #ba3d03 30%, #e58423 50%, #ba3d03 70%, transparent 100%)",
-            }}
-          />
-        )}
+        {/* top accent bar */}
+        <div
+          className="absolute top-0 inset-x-0 h-[2.5px]"
+          style={{ background: ACCENT_BAR }}
+        />
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 flex h-[68px] items-center justify-between gap-8">
-          {/* ── Logo ──────────────────────────────────── */}
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 flex h-[68px] items-center justify-between">
+          {/* ── Logo ─────────────────────────────── */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="flex items-center gap-3 shrink-0 group"
           >
-            {/* Icon mark */}
             <div className="relative w-10 h-10 shrink-0">
               {/* spinning ring */}
               <svg
@@ -77,175 +82,157 @@ export default function Navbar() {
                   cx="20"
                   cy="20"
                   r="18"
-                  stroke="url(#navRing)"
-                  strokeWidth="1.5"
-                  strokeDasharray="6 4"
+                  stroke={N.copper}
+                  strokeWidth="1.2"
+                  strokeDasharray="5 3"
                   opacity="0.6"
                 />
-                <defs>
-                  <linearGradient
-                    id="navRing"
-                    x1="0"
-                    y1="0"
-                    x2="40"
-                    y2="40"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stopColor="#e8c581" />
-                    <stop offset="1" stopColor="#ba3d03" />
-                  </linearGradient>
-                </defs>
               </svg>
-              {/* solid bg circle */}
+              {/* inner circle */}
               <div
-                className="absolute inset-[4px] rounded-full flex items-center justify-center"
+                className="absolute inset-[5px] rounded-full flex items-center justify-center"
                 style={{
-                  background: "linear-gradient(135deg,#3d1202,#7a2503)",
+                  background: `linear-gradient(135deg,${N.canvas},${N.mid})`,
                 }}
               >
-                {/* scales SVG mini */}
-                <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  className="w-[17px] h-[17px]"
+                >
                   <rect
                     x="9.5"
                     y="2"
-                    width="1.2"
-                    height="15"
-                    rx="0.6"
-                    fill="#e8c581"
+                    width="1"
+                    height="13.5"
+                    rx="0.5"
+                    fill={N.linen}
                   />
                   <rect
                     x="3"
-                    y="17"
+                    y="15.5"
                     width="14"
-                    height="1.8"
-                    rx="0.9"
-                    fill="#e8c581"
+                    height="1.5"
+                    rx="0.75"
+                    fill={N.linen}
                   />
                   <rect
                     x="2"
-                    y="4"
+                    y="4.5"
                     width="16"
-                    height="1.4"
-                    rx="0.7"
-                    fill="#e8c581"
+                    height="1.2"
+                    rx="0.6"
+                    fill={N.linen}
                   />
                   <line
                     x1="4"
-                    y1="5.4"
+                    y1="5.7"
                     x2="4"
-                    y2="10"
-                    stroke="#e8c581"
-                    strokeWidth="0.8"
+                    y2="9.5"
+                    stroke={N.linen}
+                    strokeWidth="0.7"
                   />
                   <path
-                    d="M1.5 10 Q4 13 6.5 10"
-                    stroke="#e8c581"
-                    strokeWidth="1"
+                    d="M1.5 9.5 Q4 12 6.5 9.5"
+                    stroke={N.linen}
+                    strokeWidth="0.9"
                     fill="none"
+                    strokeLinecap="round"
                   />
                   <line
                     x1="16"
-                    y1="5.4"
+                    y1="5.7"
                     x2="16"
-                    y2="10"
-                    stroke="#e8c581"
-                    strokeWidth="0.8"
+                    y2="9.5"
+                    stroke={N.linen}
+                    strokeWidth="0.7"
                   />
                   <path
-                    d="M13.5 10 Q16 13 18.5 10"
-                    stroke="#e8c581"
-                    strokeWidth="1"
+                    d="M13.5 9.5 Q16 12 18.5 9.5"
+                    stroke={N.linen}
+                    strokeWidth="0.9"
                     fill="none"
+                    strokeLinecap="round"
                   />
                 </svg>
               </div>
             </div>
-
-            {/* Wordmark */}
             <div className="leading-none">
               <span
-                className="block font-heading font-black tracking-[-0.02em] text-[1.2rem]"
-                style={{ color: "#ffffff" }}
+                className="block font-heading font-black text-[1.15rem] tracking-[-0.02em] transition-colors duration-300"
+                style={{ color: N.white }}
               >
                 IN2LAW
               </span>
               <span
-                className="block text-[9px] font-semibold tracking-[0.28em] uppercase mt-[-1px]"
-                style={{ color: "#e8c581" }}
+                className="block text-[8.5px] font-bold tracking-[0.3em] uppercase mt-[-1px] transition-colors duration-300"
+                style={{ color: N.linen }}
               >
                 Academy
               </span>
             </div>
           </button>
 
-          {/* ── Desktop nav ───────────────────────────── */}
-          <nav className="hidden lg:flex items-center gap-1">
+          {/* ── Desktop nav ──────────────────────── */}
+          <nav className="hidden lg:flex items-center">
             {NAV.map((l) => (
               <button
                 key={l.href}
-                onClick={() => {
-                  setActive(l.href);
-                  go(l.href);
-                }}
-                className="relative px-4 py-2 rounded-full text-[13.5px] font-medium transition-all duration-200"
-                style={{
-                  color:
-                    active === l.href ? "#e8c581" : "rgba(255,255,255,0.6)",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+                onClick={() => go(l.href)}
+                className="relative px-4 py-2 text-[13.5px] font-medium rounded-full transition-all duration-200 group"
+                style={{ color: "rgba(237,227,215,0.62)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = N.linen)}
                 onMouseLeave={(e) =>
-                  (e.currentTarget.style.color =
-                    active === l.href ? "#e8c581" : "rgba(255,255,255,0.6)")
+                  (e.currentTarget.style.color = "rgba(237,227,215,0.62)")
                 }
               >
                 {l.label}
+                <span
+                  className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-[2px] rounded-full group-hover:w-[55%] transition-all duration-300"
+                  style={{ background: N.copper }}
+                />
               </button>
             ))}
           </nav>
 
-          {/* ── CTA group ─────────────────────────────── */}
-          <div className="hidden lg:flex items-center gap-3">
-            {/* phone */}
+          {/* ── CTA group ────────────────────────── */}
+          <div className="hidden lg:flex items-center gap-4">
             <a
               href="tel:+919999999999"
-              className="text-[13px] font-medium transition-colors"
-              style={{ color: "rgba(232,197,129,0.7)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#e8c581")}
+              className="flex items-center gap-1.5 text-[13px] font-medium transition-colors"
+              style={{ color: "rgba(237,227,215,0.55)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = N.linen)}
               onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "rgba(232,197,129,0.7)")
+                (e.currentTarget.style.color = "rgba(237,227,215,0.55)")
               }
             >
-              +91&nbsp;99999&nbsp;99999
+              <Phone className="w-3.5 h-3.5" />
+              +91 99999 99999
             </a>
-
-            {/* divider */}
             <div
               className="h-5 w-px"
-              style={{ background: "rgba(255,255,255,0.12)" }}
+              style={{ background: "rgba(237,227,215,0.12)" }}
             />
-
-            {/* primary CTA */}
             <motion.button
               onClick={() => go("#demo")}
-              whileHover={{ scale: 1.04 }}
+              whileHover={{ scale: 1.05, y: -1 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-shimmer pulse-cta flex items-center gap-1.5 px-5 py-2.5 rounded-full text-white font-bold text-[13.5px] shadow-lg"
-              style={{ boxShadow: "0 4px 20px rgba(229,132,35,0.35)" }}
+              className="btn-primary pulse-cta flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[13.5px] shadow-md"
+              style={{ boxShadow: "0 4px 18px rgba(178,106,25,0.3)" }}
             >
               Book Free Demo
               <ChevronRight className="w-3.5 h-3.5" />
             </motion.button>
           </div>
 
-          {/* ── Hamburger ─────────────────────────────── */}
+          {/* ── Hamburger ────────────────────────── */}
           <button
             onClick={() => setOpen(!open)}
-            className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg transition-colors"
+            className="lg:hidden w-9 h-9 flex items-center justify-center rounded-xl transition-all"
             style={{
-              color: "#fff",
-              background: open
-                ? "rgba(186,61,3,0.3)"
-                : "rgba(255,255,255,0.06)",
+              background: "rgba(255,255,255,0.07)",
+              border: "1px solid rgba(237,227,215,0.14)",
+              color: N.white,
             }}
             aria-label="Toggle menu"
           >
@@ -256,7 +243,7 @@ export default function Navbar() {
                   initial={{ rotate: -90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.18 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <X className="w-5 h-5" />
                 </motion.span>
@@ -266,7 +253,7 @@ export default function Navbar() {
                   initial={{ rotate: 90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.18 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <Menu className="w-5 h-5" />
                 </motion.span>
@@ -276,86 +263,86 @@ export default function Navbar() {
         </div>
       </motion.header>
 
-      {/* ── Mobile drawer ──────────────────────────────────────── */}
+      {/* ─── Mobile drawer ────────────────────────────────────── */}
       <AnimatePresence>
         {open && (
           <>
-            {/* backdrop */}
             <motion.div
-              key="backdrop"
+              key="bd"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
               className="fixed inset-0 z-40 lg:hidden"
               style={{
-                background: "rgba(0,0,0,0.7)",
-                backdropFilter: "blur(4px)",
+                background: "rgba(26,15,8,0.7)",
+                backdropFilter: "blur(6px)",
               }}
               onClick={() => setOpen(false)}
             />
-
-            {/* panel */}
             <motion.div
               key="panel"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-[300px] flex flex-col lg:hidden"
+              transition={{ type: "spring", stiffness: 280, damping: 28 }}
+              className="fixed top-0 right-0 bottom-0 z-50 w-[285px] flex flex-col lg:hidden"
               style={{
-                background: "#0e0502",
-                borderLeft: "1px solid rgba(232,197,129,0.1)",
+                background: "#120a04",
+                borderLeft: `1px solid rgba(237,227,215,0.1)`,
               }}
             >
-              {/* panel header */}
+              {/* header */}
               <div
                 className="flex items-center justify-between px-6 h-[68px]"
-                style={{ borderBottom: "1px solid rgba(232,197,129,0.08)" }}
+                style={{ borderBottom: "1px solid rgba(237,227,215,0.07)" }}
               >
-                <span className="font-heading font-black text-white text-lg">
-                  Menu
+                <span
+                  className="font-heading font-black text-lg"
+                  style={{ color: N.white }}
+                >
+                  IN2LAW
                 </span>
                 <button
                   onClick={() => setOpen(false)}
-                  className="w-9 h-9 flex items-center justify-center rounded-lg"
-                  style={{ background: "rgba(186,61,3,0.3)", color: "#fff" }}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg"
+                  style={{
+                    background: "rgba(178,106,25,0.15)",
+                    color: N.linen,
+                  }}
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
-
               {/* links */}
-              <nav className="flex flex-col px-4 pt-6 gap-1 flex-1">
+              <nav className="flex flex-col px-4 pt-4 gap-1 flex-1">
                 {NAV.map((l, i) => (
                   <motion.button
                     key={l.href}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 16 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.06 }}
+                    transition={{ delay: i * 0.055 }}
                     onClick={() => go(l.href)}
-                    className="flex items-center justify-between px-4 py-3.5 rounded-xl font-medium text-base transition-all"
-                    style={{ color: "rgba(255,255,255,0.75)" }}
+                    className="flex items-center justify-between px-4 py-3.5 rounded-xl font-medium text-[15px] transition-all"
+                    style={{ color: "rgba(237,227,215,0.7)" }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(186,61,3,0.15)";
-                      e.currentTarget.style.color = "#e8c581";
+                      e.currentTarget.style.background = "rgba(178,106,25,0.1)";
+                      e.currentTarget.style.color = N.linen;
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = "transparent";
-                      e.currentTarget.style.color = "rgba(255,255,255,0.75)";
+                      e.currentTarget.style.color = "rgba(237,227,215,0.7)";
                     }}
                   >
                     {l.label}
-                    <ChevronRight className="w-4 h-4 opacity-40" />
+                    <ChevronRight className="w-4 h-4 opacity-35" />
                   </motion.button>
                 ))}
               </nav>
-
-              {/* panel footer CTAs */}
+              {/* footer */}
               <div className="p-5 space-y-3">
                 <button
                   onClick={() => go("#demo")}
-                  className="btn-shimmer w-full py-3.5 rounded-2xl text-white font-bold text-base"
+                  className="btn-primary pulse-cta w-full py-3.5 rounded-2xl text-base font-bold"
                 >
                   Book Free Demo
                 </button>
@@ -363,10 +350,11 @@ export default function Navbar() {
                   href="tel:+919999999999"
                   className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-sm font-semibold"
                   style={{
-                    color: "#e8c581",
-                    border: "1px solid rgba(232,197,129,0.2)",
+                    color: N.linen,
+                    border: `1px solid rgba(237,227,215,0.18)`,
                   }}
                 >
+                  <Phone className="w-4 h-4" />
                   +91 99999 99999
                 </a>
               </div>

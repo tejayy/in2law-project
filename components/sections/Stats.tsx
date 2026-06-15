@@ -1,50 +1,32 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "motion/react";
 import { Trophy, BookOpen, Clock, CheckCircle, Users2 } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
+const P = {
+  bg: "#1a0f08",
+  canvas: "#2e2612",
+  mid: "#4a2e0a",
+  warm: "#6b3e0f",
+  copper: "#b26a19",
+  amber: "#c88a3a",
+  linen: "#ede3d7",
+  panel: "rgba(252,248,242,0.97)",
+  white: "#ffffff",
+} as const;
+const SHADOW =
+  "0 32px 80px rgba(46,38,18,0.45), 0 0 0 1px rgba(237,227,215,0.25)";
+const ACCENT_BAR =
+  "linear-gradient(90deg,#2e2612,#6b3e0f,#b26a19,#6b3e0f,#2e2612)";
 
 const stats = [
-  {
-    icon: CheckCircle,
-    value: 100,
-    suffix: "%",
-    label: "Student Support",
-    color: "#E58423",
-  },
-  {
-    icon: Trophy,
-    value: 5,
-    suffix: "+ Yrs",
-    label: "Expert Experience",
-    color: "#E8C581",
-  },
-  {
-    icon: BookOpen,
-    value: 7000,
-    suffix: "+",
-    label: "Practice Questions",
-    color: "#E58423",
-  },
-  {
-    icon: Users2,
-    value: 70,
-    suffix: "+",
-    label: "Mock Tests",
-    color: "#E8C581",
-  },
-  {
-    icon: Clock,
-    value: 720,
-    suffix: "+",
-    label: "Teaching Hours",
-    color: "#E58423",
-  },
+  { icon: CheckCircle, value: 100, suffix: "%", label: "Student Support" },
+  { icon: Trophy, value: 5, suffix: "+ Yrs", label: "Expert Experience" },
+  { icon: BookOpen, value: 7000, suffix: "+", label: "Practice Questions" },
+  { icon: Users2, value: 70, suffix: "+", label: "Mock Tests" },
+  { icon: Clock, value: 720, suffix: "+", label: "Teaching Hours" },
 ];
-
 const toppers = [
   {
     name: "Aditi Sharma",
@@ -76,7 +58,6 @@ function Counter({ end, suffix }: { end: number; suffix: string }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
-
   useEffect(() => {
     const obs = new IntersectionObserver(
       ([e]) => {
@@ -97,7 +78,6 @@ function Counter({ end, suffix }: { end: number; suffix: string }) {
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [end]);
-
   return (
     <span ref={ref}>
       {count}
@@ -107,112 +87,200 @@ function Counter({ end, suffix }: { end: number; suffix: string }) {
 }
 
 export default function Stats() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".stat-card", {
-        y: 50,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.1,
-        ease: "back.out(1.4)",
-        scrollTrigger: { trigger: ".stats-grid", start: "top 80%" },
-      });
-      gsap.from(".topper-card", {
-        scale: 0.88,
-        opacity: 0,
-        duration: 0.55,
-        stagger: 0.1,
-        ease: "back.out(1.3)",
-        scrollTrigger: { trigger: ".toppers-grid", start: "top 80%" },
-      });
-    }, sectionRef);
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section
       id="results"
-      ref={sectionRef}
-      className="py-24 bean-gradient relative overflow-hidden"
+      className="py-24 relative overflow-hidden"
+      style={{
+        background: `linear-gradient(180deg,${P.bg} 0%,${P.canvas} 60%,${P.bg} 100%)`,
+      }}
     >
-      {/* dot matrix */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.045]"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          backgroundImage:
-            "radial-gradient(circle,#E8C581 1px,transparent 1px)",
+          backgroundImage: `radial-gradient(circle,rgba(237,227,215,0.08) 1px,transparent 1px)`,
           backgroundSize: "30px 30px",
+          maskImage:
+            "radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%)",
         }}
       />
-      {/* top divider */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#E8C581]/40 to-transparent" />
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: "20%",
+          left: "50%",
+          transform: "translate(-50%,-50%)",
+          width: 700,
+          height: 400,
+          borderRadius: "50%",
+          background: `radial-gradient(circle,rgba(107,62,15,0.4) 0%,transparent 65%)`,
+          filter: "blur(60px)",
+        }}
+      />
+      <hr className="hr-warm absolute top-0 inset-x-0 border-none h-px" />
 
       <div className="max-w-7xl mx-auto px-5 sm:px-8 relative">
-        {/* heading */}
-        <div className="text-center mb-14">
-          <span className="inline-block text-[#E58423] text-xs font-bold tracking-[0.22em] uppercase mb-3">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-14"
+        >
+          <span
+            className="inline-block text-xs font-bold tracking-[0.22em] uppercase mb-3"
+            style={{ color: P.copper }}
+          >
             Social Proof
           </span>
-          <h2 className="font-heading text-4xl sm:text-5xl font-extrabold text-white mb-3">
+          <h2
+            className="font-heading text-4xl sm:text-5xl font-extrabold mb-3"
+            style={{ color: P.white }}
+          >
             Trusted by Future{" "}
-            <span className="cream-text">Legal Professionals</span>
+            <span
+              style={{
+                background: "linear-gradient(135deg,#ede3d7,#f5ece2)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Legal Professionals
+            </span>
           </h2>
-          <p className="text-white/55 text-lg max-w-md mx-auto">
+          <p
+            className="text-lg max-w-md mx-auto"
+            style={{ color: "rgba(237,227,215,0.55)" }}
+          >
             Numbers that reflect our commitment to your success.
           </p>
-        </div>
+        </motion.div>
 
-        {/* stats */}
-        <div className="stats-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
-          {stats.map((s) => (
-            <div
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
+          {stats.map((s, index) => (
+            <motion.div
               key={s.label}
-              className="stat-card glass-warm rounded-2xl p-6 text-center group hover:scale-105 transition-transform duration-300 cursor-default"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{
+                duration: 0.55,
+                delay: index * 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="relative rounded-2xl p-6 text-center group hover:scale-105 transition-transform duration-300 cursor-default overflow-hidden"
+              style={{ background: P.panel, boxShadow: SHADOW }}
             >
-              <s.icon
-                className="w-7 h-7 mx-auto mb-3"
-                style={{ color: s.color }}
+              <div
+                className="absolute top-0 inset-x-0 h-[3px]"
+                style={{ background: ACCENT_BAR }}
               />
               <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-3"
+                style={{
+                  background: "rgba(178,106,25,0.08)",
+                  border: "1px solid rgba(178,106,25,0.15)",
+                }}
+              >
+                <s.icon className="w-5 h-5" style={{ color: P.copper }} />
+              </div>
+              <div
                 className="font-heading text-3xl font-extrabold mb-1"
-                style={{ color: s.color }}
+                style={{
+                  background: "linear-gradient(135deg,#2e2612,#6b3e0f)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
               >
                 <Counter end={s.value} suffix={s.suffix} />
               </div>
-              <p className="text-white/55 text-xs font-medium">{s.label}</p>
-            </div>
+              <p className="text-xs font-medium" style={{ color: P.warm }}>
+                {s.label}
+              </p>
+            </motion.div>
           ))}
         </div>
 
-        {/* toppers */}
-        <p className="text-center font-heading text-2xl font-bold text-white mb-7">
-          Our <span className="cream-text">Star Performers</span>
-        </p>
-        <div className="toppers-grid grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {toppers.map((t) => (
-            <div
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center font-heading text-2xl font-bold mb-7"
+          style={{ color: P.white }}
+        >
+          Our{" "}
+          <span
+            style={{
+              background: "linear-gradient(135deg,#ede3d7,#f5ece2)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Star Performers
+          </span>
+        </motion.p>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {toppers.map((t, index) => (
+            <motion.div
               key={t.name}
-              className="topper-card relative glass-warm rounded-2xl p-5 overflow-hidden group hover:border-[#E58423]/50 transition-colors duration-300"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{
+                duration: 0.55,
+                delay: index * 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="relative rounded-2xl p-5 overflow-hidden group hover:-translate-y-1 transition-all duration-300"
+              style={{
+                background: P.panel,
+                boxShadow: SHADOW,
+                borderLeft: `3px solid ${P.copper}`,
+              }}
             >
-              {/* rank badge */}
-              <span className="absolute top-3 right-3 bg-[#E58423] text-white font-bold text-[11px] px-2.5 py-1 rounded-full">
+              <span
+                className="absolute top-3 right-3 font-bold text-[11px] px-2.5 py-1 rounded-full"
+                style={{
+                  background: "linear-gradient(135deg,#2e2612,#4a2e0a)",
+                  color: P.linen,
+                }}
+              >
                 {t.rank}
               </span>
-              {/* avatar */}
-              <div className="w-13 h-13 w-12 h-12 rounded-full bg-[#BA3D03]/40 border-2 border-[#E8C581]/40 flex items-center justify-center mb-3">
-                <span className="text-[#E8C581] font-extrabold text-lg">
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
+                style={{
+                  background: "linear-gradient(135deg,#2e2612,#4a2e0a)",
+                  border: `2px solid rgba(237,227,215,0.3)`,
+                }}
+              >
+                <span
+                  className="font-extrabold text-lg"
+                  style={{ color: P.linen }}
+                >
                   {t.name.charAt(0)}
                 </span>
               </div>
-              <h4 className="text-white font-bold mb-0.5">{t.name}</h4>
-              <p className="text-[#E58423] text-sm font-medium mb-0.5">
+              <h4 className="font-bold mb-0.5" style={{ color: P.canvas }}>
+                {t.name}
+              </h4>
+              <p
+                className="text-sm font-medium mb-0.5"
+                style={{ color: P.warm }}
+              >
                 {t.exam}
               </p>
-              <p className="text-white/45 text-xs">{t.college}</p>
-              <div className="absolute inset-0 bg-[#E58423]/4 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
-            </div>
+              <p className="text-xs" style={{ color: "rgba(46,38,18,0.5)" }}>
+                {t.college}
+              </p>
+            </motion.div>
           ))}
         </div>
       </div>

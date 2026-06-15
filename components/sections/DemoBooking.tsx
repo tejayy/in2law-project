@@ -13,6 +13,22 @@ import {
   Phone,
 } from "lucide-react";
 
+const P = {
+  bg: "#1a0f08",
+  canvas: "#2e2612",
+  mid: "#4a2e0a",
+  warm: "#6b3e0f",
+  copper: "#b26a19",
+  amber: "#c88a3a",
+  linen: "#ede3d7",
+  panel: "rgba(252,248,242,0.97)",
+  white: "#ffffff",
+} as const;
+const SHADOW =
+  "0 32px 80px rgba(46,38,18,0.45), 0 0 0 1px rgba(237,227,215,0.25)";
+const ACCENT_BAR =
+  "linear-gradient(90deg,#2e2612,#6b3e0f,#b26a19,#6b3e0f,#2e2612)";
+
 const schema = z.object({
   name: z.string().min(2, "Enter your full name"),
   phone: z.string().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit number"),
@@ -21,7 +37,6 @@ const schema = z.object({
   message: z.string().optional(),
 });
 type F = z.infer<typeof schema>;
-
 const courses = [
   "CLAT Preparation",
   "MH LAW CET (3 Year)",
@@ -29,7 +44,6 @@ const courses = [
   "Judiciary (Civil Judge / JMFC)",
   "Law Officer Examination",
 ];
-
 const perks = [
   {
     title: "Expert-led Session",
@@ -42,6 +56,16 @@ const perks = [
     desc: "No pressure — come, learn, decide at your pace.",
   },
 ];
+const fieldStyle = {
+  background: "#ffffff",
+  border: `1px solid rgba(46,38,18,0.15)`,
+  color: "#2e2612",
+};
+type FE = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+const onFocusField = (e: React.FocusEvent<FE>) =>
+  (e.target.style.border = `1px solid #b26a19`);
+const onBlurField = (e: React.FocusEvent<FE>) =>
+  (e.target.style.border = `1px solid rgba(46,38,18,0.15)`);
 
 export default function DemoBooking() {
   const [done, setDone] = useState(false);
@@ -68,59 +92,117 @@ export default function DemoBooking() {
   };
 
   return (
-    <section id="demo" className="py-24 bg-[#fdf6ec] relative overflow-hidden">
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#BA3D03]/30 to-transparent" />
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-white pointer-events-none" />
+    <section
+      id="demo"
+      className="py-24 relative overflow-hidden"
+      style={{ background: P.bg }}
+    >
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(ellipse 60% 50% at 15% 50%,rgba(107,62,15,0.25) 0%,transparent 60%),
+          radial-gradient(ellipse 50% 40% at 85% 30%,rgba(74,46,10,0.18) 0%,transparent 55%)`,
+        }}
+      />
+      <hr className="hr-warm absolute top-0 inset-x-0 border-none h-px" />
 
       <div className="max-w-7xl mx-auto px-5 sm:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-14 items-start">
-          {/* left */}
-          <div className="pt-2">
-            <div className="inline-flex items-center gap-2 bg-[#BA3D03]/10 border border-[#BA3D03]/25 rounded-full px-4 py-1.5 mb-6">
-              <Calendar className="w-4 h-4 text-[#BA3D03]" />
-              <span className="text-[#BA3D03] text-[11px] font-bold tracking-[0.18em] uppercase">
+          {/* Left */}
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="pt-2"
+          >
+            <div
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6"
+              style={{
+                background: "rgba(178,106,25,0.1)",
+                border: "1px solid rgba(178,106,25,0.25)",
+              }}
+            >
+              <Calendar className="w-4 h-4" style={{ color: P.amber }} />
+              <span
+                className="text-[11px] font-bold tracking-[0.18em] uppercase"
+                style={{ color: P.amber }}
+              >
                 Free Demo Class
               </span>
             </div>
-            <h2 className="font-heading text-4xl sm:text-5xl font-extrabold text-[#3D1202] mb-5 leading-tight">
-              Book Your <span className="orange-text">Free</span>
+            <h2
+              className="font-heading text-4xl sm:text-5xl font-extrabold mb-5 leading-tight"
+              style={{ color: P.white }}
+            >
+              Book Your{" "}
+              <span
+                style={{
+                  background: "linear-gradient(135deg,#ede3d7,#f5ece2)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Free
+              </span>
               <br />
               Demo Class Today
             </h2>
-            <p className="text-[#3D1202]/55 text-lg leading-relaxed mb-9">
+            <p
+              className="text-lg leading-relaxed mb-9"
+              style={{ color: "rgba(237,227,215,0.6)" }}
+            >
               Experience IN2LAW firsthand — teaching methodology, faculty
               expertise, and the learning environment, all before you commit.
             </p>
-
             <div className="space-y-5 mb-10">
               {perks.map((p) => (
                 <div key={p.title} className="flex gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#BA3D03]/10 border border-[#BA3D03]/20 flex items-center justify-center shrink-0">
-                    <CheckCircle className="w-5 h-5 text-[#BA3D03]" />
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                    style={{
+                      background: "rgba(178,106,25,0.1)",
+                      border: "1px solid rgba(178,106,25,0.2)",
+                    }}
+                  >
+                    <CheckCircle
+                      className="w-5 h-5"
+                      style={{ color: P.copper }}
+                    />
                   </div>
                   <div>
-                    <p className="font-bold text-[#3D1202] text-sm">
+                    <p className="font-bold text-sm" style={{ color: P.linen }}>
                       {p.title}
                     </p>
-                    <p className="text-[#3D1202]/55 text-sm">{p.desc}</p>
+                    <p
+                      className="text-sm"
+                      style={{ color: "rgba(237,227,215,0.55)" }}
+                    >
+                      {p.desc}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
-
             <div className="flex flex-col sm:flex-row gap-3">
               <a
                 href="tel:+919999999999"
-                className="flex items-center justify-center gap-2 bg-[#3D1202] text-white font-bold px-5 py-3 rounded-xl hover:bg-[#5a1c03] transition-colors"
+                className="flex items-center justify-center gap-2 font-bold px-5 py-3 rounded-xl transition-all hover:-translate-y-0.5"
+                style={{
+                  background: `linear-gradient(135deg,${P.canvas},${P.mid})`,
+                  color: P.linen,
+                  border: `1px solid rgba(237,227,215,0.15)`,
+                }}
               >
-                <Phone className="w-5 h-5 text-[#E8C581]" />
+                <Phone className="w-5 h-5" style={{ color: P.amber }} />
                 Call Now
               </a>
               <a
                 href="https://wa.me/919999999999?text=Hi%2C%20I%20want%20to%20book%20a%20free%20demo%20class%20at%20IN2LAW%20Academy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold px-5 py-3 rounded-xl hover:bg-green-600 transition-colors"
+                className="flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold px-5 py-3 rounded-xl hover:bg-green-600 transition-colors hover:-translate-y-0.5"
               >
                 <svg
                   className="w-5 h-5"
@@ -132,46 +214,74 @@ export default function DemoBooking() {
                 WhatsApp
               </a>
             </div>
-          </div>
+          </motion.div>
 
-          {/* right – form */}
-          <div className="bg-white rounded-3xl shadow-2xl shadow-[#BA3D03]/10 border border-[#BA3D03]/10 p-7 sm:p-9">
+          {/* Right */}
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            className="relative rounded-3xl p-7 sm:p-9 overflow-hidden"
+            style={{ background: P.panel, boxShadow: SHADOW }}
+          >
+            <div
+              className="absolute top-0 inset-x-0 h-[3px]"
+              style={{ background: ACCENT_BAR }}
+            />
             {done ? (
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 className="text-center py-10"
               >
-                <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-5">
-                  <CheckCircle className="w-10 h-10 text-emerald-600" />
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-5"
+                  style={{ background: "rgba(16,185,129,0.12)" }}
+                >
+                  <CheckCircle className="w-10 h-10 text-emerald-500" />
                 </div>
-                <h3 className="font-heading text-2xl font-extrabold text-[#3D1202] mb-2">
+                <h3
+                  className="font-heading text-2xl font-extrabold mb-2"
+                  style={{ color: P.canvas }}
+                >
                   Demo Booked!
                 </h3>
-                <p className="text-[#3D1202]/55">
+                <p style={{ color: "rgba(46,38,18,0.55)" }}>
                   We&apos;ll call you within 24 hours to confirm your session.
                   Check your email too!
                 </p>
               </motion.div>
             ) : (
               <>
-                <h3 className="font-heading text-2xl font-extrabold text-[#3D1202] mb-1.5">
+                <h3
+                  className="font-heading text-2xl font-extrabold mb-1.5"
+                  style={{ color: P.canvas }}
+                >
                   Book Free Demo
                 </h3>
-                <p className="text-[#3D1202]/50 text-sm mb-6">
+                <p
+                  className="text-sm mb-6"
+                  style={{ color: "rgba(46,38,18,0.5)" }}
+                >
                   We&apos;ll get back to you within a few hours.
                 </p>
-
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-[#3D1202]/65 text-sm font-medium mb-1.5 block">
-                        Full Name <span className="text-[#E58423]">*</span>
+                      <label
+                        className="text-sm font-medium mb-1.5 block"
+                        style={{ color: "rgba(46,38,18,0.65)" }}
+                      >
+                        Full Name <span style={{ color: P.copper }}>*</span>
                       </label>
                       <input
                         {...register("name")}
                         placeholder="Your full name"
-                        className="w-full border border-[#BA3D03]/20 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#E58423] focus:ring-1 focus:ring-[#E58423]/25 transition-all"
+                        className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
+                        style={fieldStyle}
+                        onFocus={onFocusField}
+                        onBlur={onBlurField}
                       />
                       {errors.name && (
                         <p className="text-red-500 text-xs mt-1">
@@ -180,18 +290,31 @@ export default function DemoBooking() {
                       )}
                     </div>
                     <div>
-                      <label className="text-[#3D1202]/65 text-sm font-medium mb-1.5 block">
-                        Phone <span className="text-[#E58423]">*</span>
+                      <label
+                        className="text-sm font-medium mb-1.5 block"
+                        style={{ color: "rgba(46,38,18,0.65)" }}
+                      >
+                        Phone <span style={{ color: P.copper }}>*</span>
                       </label>
                       <div className="flex gap-2">
-                        <span className="flex items-center px-3 bg-[#fdf6ec] border border-[#BA3D03]/20 rounded-xl text-[#3D1202]/45 text-sm">
+                        <span
+                          className="flex items-center px-3 rounded-xl text-sm"
+                          style={{
+                            background: "rgba(46,38,18,0.05)",
+                            border: `1px solid rgba(46,38,18,0.15)`,
+                            color: "rgba(46,38,18,0.45)",
+                          }}
+                        >
                           +91
                         </span>
                         <input
                           {...register("phone")}
                           placeholder="9876543210"
                           maxLength={10}
-                          className="flex-1 border border-[#BA3D03]/20 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#E58423] transition-all"
+                          className="flex-1 rounded-xl px-4 py-3 text-sm outline-none transition-all"
+                          style={fieldStyle}
+                          onFocus={onFocusField}
+                          onBlur={onBlurField}
                         />
                       </div>
                       {errors.phone && (
@@ -201,16 +324,21 @@ export default function DemoBooking() {
                       )}
                     </div>
                   </div>
-
                   <div>
-                    <label className="text-[#3D1202]/65 text-sm font-medium mb-1.5 block">
-                      Email <span className="text-[#E58423]">*</span>
+                    <label
+                      className="text-sm font-medium mb-1.5 block"
+                      style={{ color: "rgba(46,38,18,0.65)" }}
+                    >
+                      Email <span style={{ color: P.copper }}>*</span>
                     </label>
                     <input
                       {...register("email")}
                       type="email"
                       placeholder="your@email.com"
-                      className="w-full border border-[#BA3D03]/20 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#E58423] transition-all"
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all"
+                      style={fieldStyle}
+                      onFocus={onFocusField}
+                      onBlur={onBlurField}
                     />
                     {errors.email && (
                       <p className="text-red-500 text-xs mt-1">
@@ -218,14 +346,19 @@ export default function DemoBooking() {
                       </p>
                     )}
                   </div>
-
                   <div>
-                    <label className="text-[#3D1202]/65 text-sm font-medium mb-1.5 block">
-                      Target Exam <span className="text-[#E58423]">*</span>
+                    <label
+                      className="text-sm font-medium mb-1.5 block"
+                      style={{ color: "rgba(46,38,18,0.65)" }}
+                    >
+                      Target Exam <span style={{ color: P.copper }}>*</span>
                     </label>
                     <select
                       {...register("course")}
-                      className="w-full border border-[#BA3D03]/20 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#E58423] transition-all appearance-none bg-white"
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all appearance-none"
+                      style={fieldStyle}
+                      onFocus={onFocusField}
+                      onBlur={onBlurField}
                     >
                       <option value="">Select your course</option>
                       {courses.map((c) => (
@@ -240,23 +373,32 @@ export default function DemoBooking() {
                       </p>
                     )}
                   </div>
-
                   <div>
-                    <label className="text-[#3D1202]/65 text-sm font-medium mb-1.5 block">
+                    <label
+                      className="text-sm font-medium mb-1.5 block"
+                      style={{ color: "rgba(46,38,18,0.65)" }}
+                    >
                       Message (optional)
                     </label>
                     <textarea
                       {...register("message")}
                       placeholder="Any specific questions..."
                       rows={3}
-                      className="w-full border border-[#BA3D03]/20 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#E58423] transition-all resize-none"
+                      className="w-full rounded-xl px-4 py-3 text-sm outline-none transition-all resize-none"
+                      style={fieldStyle}
+                      onFocus={
+                        onFocusField as React.FocusEventHandler<HTMLTextAreaElement>
+                      }
+                      onBlur={
+                        onBlurField as React.FocusEventHandler<HTMLTextAreaElement>
+                      }
                     />
                   </div>
-
                   <button
                     type="submit"
                     disabled={busy}
-                    className="w-full bg-[#3D1202] hover:bg-[#5a1c03] disabled:opacity-55 text-[#E8C581] font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#3D1202]/20"
+                    className="btn-panel w-full disabled:opacity-55 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5"
+                    style={{ boxShadow: "0 6px 24px rgba(46,38,18,0.2)" }}
                   >
                     {busy ? (
                       <Loader2 className="w-5 h-5 animate-spin" />
@@ -266,14 +408,16 @@ export default function DemoBooking() {
                       </>
                     )}
                   </button>
-
-                  <p className="text-[#3D1202]/35 text-xs text-center">
+                  <p
+                    className="text-xs text-center"
+                    style={{ color: "rgba(46,38,18,0.35)" }}
+                  >
                     By submitting, you agree to be contacted by our team.
                   </p>
                 </form>
               </>
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

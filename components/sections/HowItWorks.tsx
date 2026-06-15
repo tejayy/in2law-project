@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { motion } from "motion/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -13,6 +14,18 @@ import {
 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const P = {
+  bg: "#1a0f08",
+  canvas: "#2e2612",
+  mid: "#4a2e0a",
+  warm: "#6b3e0f",
+  copper: "#b26a19",
+  amber: "#c88a3a",
+  linen: "#ede3d7",
+  panel: "rgba(252,248,242,0.97)",
+  white: "#ffffff",
+} as const;
 
 const steps = [
   {
@@ -54,128 +67,253 @@ const steps = [
 ];
 
 export default function HowItWorks() {
-  const ref = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLDivElement>(null);
 
+  // GSAP only for decorative connector line scaleX — no opacity/content hiding
   useEffect(() => {
+    if (!lineRef.current) return;
     const ctx = gsap.context(() => {
-      gsap.from(".step-node", {
-        scale: 0,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.15,
-        ease: "back.out(1.6)",
-        scrollTrigger: { trigger: ".steps-wrap", start: "top 78%" },
-      });
-      gsap.from(".step-text", {
-        y: 20,
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.15,
-        delay: 0.2,
-        ease: "power2.out",
-        scrollTrigger: { trigger: ".steps-wrap", start: "top 78%" },
-      });
-    }, ref);
+      gsap.fromTo(
+        lineRef.current,
+        { scaleX: 0, transformOrigin: "left center" },
+        {
+          scaleX: 1,
+          duration: 1.2,
+          ease: "power2.out",
+          scrollTrigger: { trigger: lineRef.current, start: "top 80%" },
+        },
+      );
+    });
     return () => ctx.revert();
   }, []);
 
   return (
     <section
       id="how"
-      ref={ref}
-      className="py-24 bg-white relative overflow-hidden"
+      className="py-24 relative overflow-hidden"
+      style={{
+        background: `linear-gradient(180deg,${P.bg} 0%,${P.canvas} 50%,${P.bg} 100%)`,
+      }}
     >
-      <div className="absolute inset-0 bg-[#3D1202]/[0.015] pointer-events-none" />
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#BA3D03]/25 to-transparent" />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `radial-gradient(circle,rgba(237,227,215,0.06) 1px,transparent 1px)`,
+          backgroundSize: "38px 38px",
+          maskImage:
+            "radial-gradient(ellipse 90% 80% at 50% 50%,black 30%,transparent 100%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 90% 80% at 50% 50%,black 30%,transparent 100%)",
+        }}
+      />
+      <hr className="hr-warm absolute top-0 inset-x-0 border-none h-px" />
 
       <div className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="text-center mb-16">
-          <span className="inline-block text-[#BA3D03] text-xs font-bold tracking-[0.22em] uppercase mb-3">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-16"
+        >
+          <span
+            className="inline-block text-xs font-bold tracking-[0.22em] uppercase mb-3"
+            style={{ color: P.copper }}
+          >
             The Process
           </span>
-          <h2 className="font-heading text-4xl sm:text-5xl font-extrabold text-[#3D1202] mb-3">
-            How It <span className="orange-text">Works</span>
+          <h2
+            className="font-heading text-4xl sm:text-5xl font-extrabold mb-3"
+            style={{ color: P.white }}
+          >
+            How It{" "}
+            <span
+              style={{
+                background: "linear-gradient(135deg,#ede3d7,#f5ece2)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Works
+            </span>
           </h2>
-          <p className="text-[#3D1202]/55 text-lg max-w-md mx-auto">
+          <p
+            className="text-lg max-w-md mx-auto"
+            style={{ color: "rgba(237,227,215,0.55)" }}
+          >
             Six steps from enrolment to exam-day confidence.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Desktop horizontal */}
-        <div className="steps-wrap hidden lg:block relative">
-          {/* connector line */}
-          <div className="absolute top-10 left-[calc(8.33%+24px)] right-[calc(8.33%+24px)] h-px bg-gradient-to-r from-[#BA3D03]/30 via-[#E58423] to-[#BA3D03]/30" />
-
+        {/* Desktop */}
+        <div className="hidden lg:block relative">
+          <div
+            ref={lineRef}
+            className="absolute top-10 left-[calc(8.33%+24px)] right-[calc(8.33%+24px)] h-[2px]"
+            style={{
+              background: `linear-gradient(90deg,rgba(237,227,215,0.15),${P.copper},rgba(237,227,215,0.15))`,
+            }}
+          />
           <div className="grid grid-cols-6 gap-4">
-            {steps.map((s, i) => (
-              <div
-                key={s.step}
-                className="flex flex-col items-center text-center"
-              >
-                {/* node */}
+            {steps.map((s, i) => {
+              const last = i === steps.length - 1;
+              return (
                 <div
-                  className={`step-node relative w-20 h-20 rounded-full flex items-center justify-center mb-4 z-10 transition-transform hover:scale-110 ring-2 ${
-                    i === steps.length - 1
-                      ? "bg-[#E58423] ring-[#E8C581]/50 shadow-xl shadow-[#E58423]/30"
-                      : "bg-[#3D1202] ring-[#BA3D03]/40 shadow-lg"
-                  }`}
+                  key={s.step}
+                  className="flex flex-col items-center text-center"
                 >
-                  <s.icon
-                    className={`w-7 h-7 ${i === steps.length - 1 ? "text-white" : "text-[#E8C581]"}`}
-                  />
-                  <span
-                    className={`absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full text-[10px] font-extrabold flex items-center justify-center ${
-                      i === steps.length - 1
-                        ? "bg-[#3D1202] text-[#E8C581]"
-                        : "bg-[#E58423] text-white"
-                    }`}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.6 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{
+                      duration: 0.5,
+                      delay: i * 0.12,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="relative w-20 h-20 rounded-full flex items-center justify-center mb-4 z-10 hover:scale-110 transition-transform duration-200"
+                    style={
+                      last
+                        ? {
+                            background: P.copper,
+                            boxShadow: `0 0 0 4px rgba(178,106,25,0.2),0 8px 24px rgba(178,106,25,0.35)`,
+                          }
+                        : {
+                            background: `linear-gradient(135deg,${P.canvas},${P.mid})`,
+                            border: `2px solid rgba(237,227,215,0.2)`,
+                            boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
+                          }
+                    }
                   >
-                    {i + 1}
-                  </span>
+                    <s.icon
+                      className="w-7 h-7"
+                      style={{ color: last ? P.canvas : P.amber }}
+                    />
+                    <span
+                      className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full text-[10px] font-extrabold flex items-center justify-center"
+                      style={
+                        last
+                          ? {
+                              background: `linear-gradient(135deg,${P.canvas},${P.mid})`,
+                              color: P.linen,
+                            }
+                          : { background: P.copper, color: P.canvas }
+                      }
+                    >
+                      {i + 1}
+                    </span>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{
+                      duration: 0.5,
+                      delay: i * 0.12 + 0.15,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    <h4
+                      className="font-bold text-sm mb-1"
+                      style={{ color: last ? P.amber : P.linen }}
+                    >
+                      {s.title}
+                    </h4>
+                    <p
+                      className="text-xs leading-relaxed"
+                      style={{ color: "rgba(237,227,215,0.5)" }}
+                    >
+                      {s.desc}
+                    </p>
+                  </motion.div>
                 </div>
-                <div className="step-text">
-                  <h4 className="font-bold text-[#3D1202] text-sm mb-1">
-                    {s.title}
-                  </h4>
-                  <p className="text-[#3D1202]/50 text-xs leading-relaxed">
-                    {s.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Mobile vertical */}
-        <div className="steps-wrap lg:hidden relative pl-12">
-          <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#BA3D03]/20 via-[#E58423] to-[#BA3D03]/20" />
+        {/* Mobile */}
+        <div className="lg:hidden relative pl-12">
+          <div
+            className="absolute left-5 top-0 bottom-0 w-[2px]"
+            style={{
+              background: `linear-gradient(180deg,rgba(237,227,215,0.1),${P.copper},rgba(237,227,215,0.1))`,
+            }}
+          />
           <div className="flex flex-col gap-8">
-            {steps.map((s, i) => (
-              <div key={s.step} className="relative flex gap-5">
-                <div
-                  className={`step-node absolute -left-12 w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10 ${
-                    i === steps.length - 1
-                      ? "bg-[#E58423]"
-                      : "bg-[#3D1202] border-2 border-[#BA3D03]/40"
-                  }`}
-                >
-                  <s.icon
-                    className={`w-4 h-4 ${i === steps.length - 1 ? "text-white" : "text-[#E8C581]"}`}
-                  />
+            {steps.map((s, i) => {
+              const last = i === steps.length - 1;
+              return (
+                <div key={s.step} className="relative flex gap-5">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.6 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{
+                      duration: 0.45,
+                      delay: i * 0.08,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="absolute -left-12 w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10"
+                    style={
+                      last
+                        ? {
+                            background: P.copper,
+                            boxShadow: `0 0 0 3px rgba(178,106,25,0.25)`,
+                          }
+                        : {
+                            background: `linear-gradient(135deg,${P.canvas},${P.mid})`,
+                            border: `2px solid rgba(237,227,215,0.2)`,
+                          }
+                    }
+                  >
+                    <s.icon
+                      className="w-4 h-4"
+                      style={{ color: last ? P.canvas : P.amber }}
+                    />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{
+                      duration: 0.45,
+                      delay: i * 0.08 + 0.1,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="rounded-2xl p-4 w-full"
+                    style={{
+                      background: "rgba(46,38,18,0.5)",
+                      border: "1px solid rgba(237,227,215,0.1)",
+                      backdropFilter: "blur(12px)",
+                      WebkitBackdropFilter: "blur(12px)",
+                    }}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <span
+                        className="font-extrabold text-xs"
+                        style={{ color: P.copper }}
+                      >
+                        {s.step}
+                      </span>
+                      <h4
+                        className="font-bold text-sm"
+                        style={{ color: last ? P.amber : P.linen }}
+                      >
+                        {s.title}
+                      </h4>
+                    </div>
+                    <p
+                      className="text-sm"
+                      style={{ color: "rgba(237,227,215,0.55)" }}
+                    >
+                      {s.desc}
+                    </p>
+                  </motion.div>
                 </div>
-                <div className="step-text bg-[#fdf6ec] rounded-2xl p-4 border border-[#BA3D03]/10 w-full">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[#E58423] font-extrabold text-xs">
-                      {s.step}
-                    </span>
-                    <h4 className="font-bold text-[#3D1202] text-sm">
-                      {s.title}
-                    </h4>
-                  </div>
-                  <p className="text-[#3D1202]/55 text-sm">{s.desc}</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
